@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_number": "404196713183",
+    "project_id": "the-kraft"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404196713183:android:b3fe165be0830815",
+        "android_client_info": {
+          "package_name": "com.spaceuptech.kraft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404196713183-sdlcb1pgg9l41jgnc6ifeunsugm1ctd2.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "404196713183-5g4a3a7tfs7ovqd5kvv2opm0nrqlvhj7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spaceuptech.kraft",
+            "certificate_hash": "f3c5035fef262b54970b744df3bcc02d675c9cc7"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdbgpCDK7yvlW2vLkVp9fPyT3FJbbVS2A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-104521884-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
