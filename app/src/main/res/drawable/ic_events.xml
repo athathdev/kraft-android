@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- if tab is selected then white color to icon-->
+        <item android:drawable="@drawable/ic_event_white"
+    android:state_selected="true"/>
+    <!-- if tab is not selected then grey color to icon-->
+         <item android:drawable="@drawable/ic_event_grey" />
+</selector>

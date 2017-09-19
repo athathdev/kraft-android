@@ -1,4 +1,4 @@
-package com.spaceuptech.kraft;
+package com.spaceuptech.kraft.login;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,6 +18,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.spaceuptech.clientapi.ClientApi;
+import com.spaceuptech.kraft.R;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
