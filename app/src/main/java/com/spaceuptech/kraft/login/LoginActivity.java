@@ -3,9 +3,12 @@ package com.spaceuptech.kraft.login;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +26,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.spaceuptech.clientapi.ClientApi;
 import com.spaceuptech.kraft.DataService;
+import com.spaceuptech.kraft.MainActivity;
 import com.spaceuptech.kraft.R;
+import com.spaceuptech.kraft.data.LoginResponse;
+import com.spaceuptech.kraft.signup.SignUpActivity;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -36,6 +42,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter(DataService.REQUEST_LOGIN));
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
@@ -54,6 +63,42 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         startService(new Intent(this, DataService.class));
     }
 
+
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            byte[] array = intent.getByteArrayExtra("args");
+            LoginResponse response = new Gson().fromJson(new String(array), LoginResponse.class);
+            if (!response.ack) {
+                Snackbar.make(findViewById(R.id.activityLoginLayout), response.err, Snackbar.LENGTH_LONG).show();
+                return;
+            }
+            DataService.SESSION_ID = response.sessionId;
+
+            SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_user), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("name", response.user.name);
+            editor.putString("email", response.user.email);
+            editor.putString("img", response.user.img);
+            editor.commit();
+
+            if (response.exists) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+                return;
+            }
+            startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+            finish();
+        }
+    };
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -70,7 +115,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 JsonObject json = new JsonObject();
                 json.addProperty("idToken", idToken);
-                json.addProperty("type", "google");
+                json.addProperty("auth", "google");
+
                 ClientApi.call(this, "kraft-login", "login", new Gson().toJson(json).getBytes());
             } else {
                 // Signed out, show unauthenticated UI.
@@ -124,10 +170,4 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
-    };
 }
