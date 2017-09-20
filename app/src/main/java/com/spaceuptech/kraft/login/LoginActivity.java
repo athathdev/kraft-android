@@ -18,7 +18,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.spaceuptech.clientapi.ClientApi;
 import com.spaceuptech.kraft.R;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -27,8 +26,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
-
-    private TextView lblText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +41,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        lblText = (TextView) findViewById(R.id.lblText);
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(this);
@@ -76,10 +72,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Log.d(TAG, "ID - "+ personId);
                 assert personPhoto != null;
                 Log.d(TAG, "Photo url - "+ personPhoto.toString());
-                lblText.setText(personName + " " + personGivenName + " " + personFamilyName + " " + personEmail + " " + personId + " " + personPhoto.toString());
             } else {
                 // Signed out, show unauthenticated UI.
-                lblText.setText("Not signed in");
             }
         }
     }
@@ -102,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         @Override
                         public void onResult(Status status) {
                             if (status.isSuccess()) {
-                                lblText.setText("Not signed in");
+//                                lblText.setText("Not signed in");
                             } else {
                                 Log.d(TAG, "Could not sign out");
                             }

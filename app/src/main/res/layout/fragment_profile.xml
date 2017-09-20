@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/gradient_background"
     android:orientation="vertical"
     tools:context="com.spaceuptech.kraft.profile.ProfileFragment">
 
@@ -15,7 +15,7 @@
             android:layout_marginTop="64dp"
             android:layout_marginBottom="32dp"
             android:layout_gravity="center_horizontal"
-            />
+            android:src="@drawable/profile"/>
     <TextView
         android:id="@+id/lblNameProfile"
         android:layout_width="wrap_content"

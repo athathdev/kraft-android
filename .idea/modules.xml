@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file:///media/noorain/Noorain/space-up/projects/kraft/android/android.iml" filepath="/media/noorain/Noorain/space-up/projects/kraft/android/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file:///media/noorain/Noorain/space-up/projects/kraft/android/app/app.iml" filepath="/media/noorain/Noorain/space-up/projects/kraft/android/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/kraft-android.iml" filepath="$PROJECT_DIR$/kraft-android.iml" />
     </modules>
   </component>

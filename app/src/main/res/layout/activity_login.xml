@@ -4,24 +4,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.spaceuptech.kraft.login.LoginActivity">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/gradient_background"
+    tools:context="com.spaceuptech.kraft.login.LoginActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Welcome to The Kraft"
+        android:textSize="48sp"
+        android:textColor="@color/colorTextPrimaryWhite"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Your ride to Space"
+        android:textSize="20sp"
+        android:textColor="@color/colorTextPrimaryWhite"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"/>
-
-    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign Out"
-        android:onClick="googleSignOut" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="32dp"/>
 
-    <TextView
-        android:id="@+id/lblText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
 
 </LinearLayout>
