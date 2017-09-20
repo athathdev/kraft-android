@@ -14,6 +14,7 @@ import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 public class DataService extends Service {
     public static String SESSION_ID = "";
     private ClientApi api;
+    private DatabaseHelper dbHelper;
 
     public DataService() {
     }
@@ -35,6 +36,8 @@ public class DataService extends Service {
         super.onCreate();
 
         Log.d("Connected", "Service started");
+
+        dbHelper = new DatabaseHelper(getApplicationContext());
 
         api = new ClientApi("192.168.3.44", 11100, true, new ClientApi.OnMessageReceived() {
             @Override
@@ -67,6 +70,7 @@ public class DataService extends Service {
     public void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(api.requestReceiver);
         unregisterReceiver(api.networkChangeReceiver);
+        dbHelper.close();
         super.onDestroy();
     }
 }

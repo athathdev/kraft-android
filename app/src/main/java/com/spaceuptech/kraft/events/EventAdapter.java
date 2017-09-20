@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.spaceuptech.kraft.DatabaseHelper;
 import com.spaceuptech.kraft.R;
 import com.spaceuptech.kraft.data.Event;
 
@@ -26,11 +27,14 @@ import static com.spaceuptech.kraft.MainActivity.colorList;
 
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
-    Context context;
-    List<Event> events;
-    EventAdapter(Context context, List<Event> events){
+    private Context context;
+    private List<Event> events;
+    private DatabaseHelper databaseHelper;
+    EventAdapter(Context context, DatabaseHelper databaseHelper, List<Event> events){
         this.context = context;
         this.events = events;
+        this.databaseHelper = databaseHelper;
+
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -54,14 +58,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             holder.textViewEventIcon.setBackground(drawable);
         }
         holder.textViewEventIcon.setText(event.name.substring(0,1).toUpperCase());
-        holder.imageButtonActionInterested.setImageResource((event.interested) ? R.drawable.ic_mood_yellow : R.drawable.ic_mood);
+        holder.imageButtonActionInterested.setImageResource( databaseHelper.checkIfInterestedEvent(event.id) ? R.drawable.ic_mood_yellow : R.drawable.ic_mood);
         holder.linearLayoutActionInterested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                events.get(position).interested = !events.get(position).interested;
+                boolean interested = false;
+                interested = databaseHelper.checkIfInterestedEvent(event.id);
                 holder.onClickAnimate(holder.imageButtonActionInterested);
-                holder.imageButtonActionInterested.setImageResource((events.get(position).interested) ? R.drawable.ic_mood_yellow : R.drawable.ic_mood);
+                holder.imageButtonActionInterested.setImageResource( !interested ? R.drawable.ic_mood_yellow : R.drawable.ic_mood);
                 //TODO Animations and sound effect on clicking like
+                if (interested) databaseHelper.setEventAsNotInterested(event.id);
+                else databaseHelper.setEventAsInterested(event.id);
             }
         });
     }

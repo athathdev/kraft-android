@@ -9,14 +9,12 @@ import java.util.Date;
 public class Event {
     public String id, name, content, organizationName;
     public long date;
-    public boolean interested;
 
-    public Event(String id, String name, String organizationName, String content, long date, boolean interested){
+    public Event(String id, String name, String organizationName, String content, long date){
         this.id = id;
         this.name = name;
         this.organizationName = organizationName;
         this.content = content;
         this.date = date;
-        this.interested = interested;
     }
 }

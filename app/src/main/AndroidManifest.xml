@@ -19,7 +19,6 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".posts.PostActivity" />
         <activity android:name=".profile.ProfileActivity" />
-
         <service android:name=".DataService" />
     </application>
 
