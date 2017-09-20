@@ -17,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
@@ -52,6 +53,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInButton.setOnClickListener(this);
 
         startService(new Intent(this, DataService.class));
+
+        silentLogin();
     }
 
     @Override
@@ -61,21 +64,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            Log.d(TAG, "handleSignInResult:" + result.getStatus());
-            if (result.isSuccess()) {
-                // Signed in successfully, show authenticated UI.
-                GoogleSignInAccount acct = result.getSignInAccount();
-                assert acct != null;
-                String idToken = acct.getIdToken();
-
-                JsonObject json = new JsonObject();
-                json.addProperty("idToken", idToken);
-                json.addProperty("type", "google");
-                ClientApi.call(this, "kraft-login", "login", new Gson().toJson(json).getBytes());
-            } else {
-                // Signed out, show unauthenticated UI.
-                Snackbar.make(findViewById(R.id.activityLoginLayout), "Could not sign in", Snackbar.LENGTH_LONG).show();
-            }
+            handleGoogleSignInResult(result);
         }
     }
 
@@ -130,4 +119,38 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         }
     };
+
+    void silentLogin() {
+        OptionalPendingResult<GoogleSignInResult> pendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (pendingResult.isDone()) {
+            GoogleSignInResult result = pendingResult.get();
+            handleGoogleSignInResult(result);
+            return;
+        }
+
+        pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+            @Override
+            public void onResult(@NonNull GoogleSignInResult result) {
+                handleGoogleSignInResult(result);
+            }
+        });
+    }
+
+    void handleGoogleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult:" + result.getStatus());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            assert acct != null;
+            String idToken = acct.getIdToken();
+
+            JsonObject json = new JsonObject();
+            json.addProperty("idToken", idToken);
+            json.addProperty("type", "google");
+            ClientApi.call(this, "kraft-login", "login", new Gson().toJson(json).getBytes());
+        } else {
+            // Signed out, show unauthenticated UI.
+            Snackbar.make(findViewById(R.id.activityLoginLayout), "Could not sign in", Snackbar.LENGTH_LONG).show();
+        }
+    }
 }
