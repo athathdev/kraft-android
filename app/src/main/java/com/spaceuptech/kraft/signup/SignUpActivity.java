@@ -24,8 +24,6 @@ public class SignUpActivity extends AppCompatActivity {
         toolbar = (Toolbar)findViewById(R.id.toolbarSignUp);
         btnDone = (Button)findViewById(R.id.btnDoneSignUp);
 
-        startService(new Intent(this, DataService.class));
-
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

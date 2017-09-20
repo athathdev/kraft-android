@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="/media/noorain/Noorain/space-up/projects/kraft/kraft-android" />
+            <option value="/media/noorain/Noorain/space-up/projects/kraft/kraft-android/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

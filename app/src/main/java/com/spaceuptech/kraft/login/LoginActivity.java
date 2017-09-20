@@ -1,13 +1,14 @@
 package com.spaceuptech.kraft.login;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,6 +19,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.spaceuptech.clientapi.ClientApi;
+import com.spaceuptech.kraft.DataService;
 import com.spaceuptech.kraft.R;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -33,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
 
@@ -44,6 +50,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(this);
+
+        startService(new Intent(this, DataService.class));
     }
 
     @Override
@@ -58,22 +66,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // Signed in successfully, show authenticated UI.
                 GoogleSignInAccount acct = result.getSignInAccount();
                 assert acct != null;
-                String personName = acct.getDisplayName();
-                String personGivenName = acct.getGivenName();
-                String personFamilyName = acct.getFamilyName();
-                String personEmail = acct.getEmail();
-                String personId = acct.getId();
-                Uri personPhoto = acct.getPhotoUrl();
+                String idToken = acct.getIdToken();
 
-                Log.d(TAG, "Name - "+ personName);
-                Log.d(TAG, "Given Name - "+ personGivenName);
-                Log.d(TAG, "Family Name - "+ personFamilyName);
-                Log.d(TAG, "Email - "+ personEmail);
-                Log.d(TAG, "ID - "+ personId);
-                assert personPhoto != null;
-                Log.d(TAG, "Photo url - "+ personPhoto.toString());
+                JsonObject json = new JsonObject();
+                json.addProperty("idToken", idToken);
+                json.addProperty("type", "google");
+                ClientApi.call(this, "kraft-login", "login", new Gson().toJson(json).getBytes());
             } else {
                 // Signed out, show unauthenticated UI.
+                Snackbar.make(findViewById(R.id.activityLoginLayout), "Could not sign in", Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -113,4 +114,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         }
     }
+
+    class SignUp {
+        String idToken, type;
+
+        SignUp(String idToken, String type) {
+            this.idToken = idToken;
+            this.type = type;
+        }
+    }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    };
 }

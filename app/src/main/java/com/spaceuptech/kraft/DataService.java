@@ -41,7 +41,7 @@ public class DataService extends Service {
             public void messageReceived(ClientApi.Request message) {
                 switch (message.func) {
                     case "login":
-                        System.out.println("Recieved: "+new String(message.args));
+                        System.out.println("Recieved: " + new String(message.args));
                         break;
                 }
             }
@@ -49,7 +49,6 @@ public class DataService extends Service {
             @Override
             public void connected() {
                 Log.d("Connected", "Connected to server");
-                ClientApi.call(getApplicationContext(), "chat-engine", "login", "{\"Chatroom\":\"123\"}".getBytes());
             }
         }, new ClientApi.OnDisconnected() {
             @Override

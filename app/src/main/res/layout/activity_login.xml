@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="@drawable/gradient_background"
-    tools:context="com.spaceuptech.kraft.login.LoginActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.spaceuptech.kraft.login.LoginActivity"
+    android:id="@+id/activityLoginLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Welcome to The Kraft"
-        android:textSize="48sp"
-        android:textColor="@color/colorTextPrimaryWhite"
-        android:textAllCaps="true"
-        android:textStyle="bold"/>
+        android:orientation="vertical"
+        android:background="@drawable/gradient_background">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Your ride to Space"
-        android:textSize="20sp"
-        android:textColor="@color/colorTextPrimaryWhite"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Welcome to The Kraft"
+            android:textSize="48sp"
+            android:textColor="@color/colorTextPrimaryWhite"
+            android:textAllCaps="true"
+            android:textStyle="bold"/>
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="32dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Your ride to Space"
+            android:textSize="20sp"
+            android:textColor="@color/colorTextPrimaryWhite"/>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"/>
 
 
-</LinearLayout>
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+
