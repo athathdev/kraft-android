@@ -7,7 +7,11 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.spaceuptech.clientapi.ClientApi;
+import com.spaceuptech.kraft.data.User;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 
@@ -15,6 +19,10 @@ public class DataService extends Service {
     public static String SESSION_ID = "";
     private ClientApi api;
     private DatabaseHelper dbHelper;
+    public static final String REQUEST_LOGIN = "login";
+    public static final String REQUEST_SIGNUP = "signup";
+
+    private Gson gson = new Gson();
 
     public DataService() {
     }
@@ -42,9 +50,22 @@ public class DataService extends Service {
         api = new ClientApi("192.168.3.44", 11100, true, new ClientApi.OnMessageReceived() {
             @Override
             public void messageReceived(ClientApi.Request message) {
-                switch (message.func) {
-                    case "login":
-                        System.out.println("Recieved: " + new String(message.args));
+                Log.d("Received", new String(message.args));
+                switch (message.engine) {
+
+                    case "kraft-login":
+                        switch (message.func) {
+                            case REQUEST_LOGIN:
+                                Intent intent = new Intent(REQUEST_LOGIN);
+                                intent.putExtra("args", message.args);
+                                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                                break;
+                            case REQUEST_SIGNUP:
+                                Intent intent1 = new Intent(REQUEST_SIGNUP);
+                                intent1.putExtra("args", message.args);
+                                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent1);
+                                break;
+                        }
                         break;
                 }
             }
