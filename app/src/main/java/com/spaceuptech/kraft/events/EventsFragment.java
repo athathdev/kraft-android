@@ -9,22 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.spaceuptech.kraft.DatabaseHelper;
 import com.spaceuptech.kraft.R;
 import com.spaceuptech.kraft.data.Event;
-import com.spaceuptech.kraft.data.Post;
-import com.spaceuptech.kraft.data.User;
-import com.spaceuptech.kraft.posts.PostAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class EventsFragment extends Fragment {
-
-    List<Event> events;
+    private DatabaseHelper databaseHelper;
+    private List<Event> events;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -37,35 +32,43 @@ public class EventsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_events, container, false);
 
+        databaseHelper = new DatabaseHelper(getContext());
+
         generateEvents();
 
         RecyclerView recyclerViewEvents = (RecyclerView) v.findViewById(R.id.recyclerViewEvents);
         RecyclerView.LayoutManager layoutManagerEvents = new LinearLayoutManager(getContext());
         recyclerViewEvents.setLayoutManager(layoutManagerEvents);
-        RecyclerView.Adapter adapterEvents = new EventAdapter(getContext(), events);
+        RecyclerView.Adapter adapterEvents = new EventAdapter(getContext(), databaseHelper, events);
         recyclerViewEvents.setAdapter(adapterEvents);
 
         return v;
     }
 
+    @Override
+    public void onDestroy() {
+        databaseHelper.close();
+        super.onDestroy();
+    }
+
     private void generateEvents(){
 
         events = new ArrayList<>();
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, true));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, false));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, true));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, false));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, false));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, true));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, false));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, true));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, false));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, true));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, false));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, true));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, false));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, true));
-        events.add(new Event("1","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L, false));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
+        events.add(new Event("776e4d5e-9dc9-11e7-abc4-cec278b6b50a","StartUp Netcon", "E-Cell VJTI", getString(R.string.lorem_ipsum), 1508046480000L));
 
     }
 
