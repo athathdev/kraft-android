@@ -15,6 +15,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.spaceuptech.clientapi.ClientApi;
+import com.spaceuptech.kraft.DataService;
 import com.spaceuptech.kraft.DatabaseHelper;
 import com.spaceuptech.kraft.R;
 import com.spaceuptech.kraft.data.Event;
@@ -30,6 +34,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     private Context context;
     private List<Event> events;
     private DatabaseHelper databaseHelper;
+    private Gson gson = new Gson();
     EventAdapter(Context context, DatabaseHelper databaseHelper, List<Event> events){
         this.context = context;
         this.events = events;
@@ -45,30 +50,66 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Event event = events.get(position);
-        holder.textViewEventName.setText(event.name);
-        holder.textViewOrganizationName.setText(event.organizationName);
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("sessionId", DataService.SESSION_ID);
+        jsonObject.addProperty("eventId", event.eventId);
+        ClientApi.call(context, DataService.ENGINE_EVENT, DataService.REQUEST_IMPRESSION_EVENT, gson.toJson(jsonObject).getBytes());
+
+        holder.textViewEventName.setText(event.eventName);
+        holder.textViewOrganizationName.setText(event.userName);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM");
         holder.textViewDate.setText(simpleDateFormat.format(new Date(event.date)));
         holder.textViewContent.setText(event.content);
         if (android.os.Build.VERSION.SDK_INT > 15){
             Drawable drawable = context.getResources().getDrawable(R.drawable.circle_shape);
-            int color = (event.name.hashCode())%colorList.length;
+            int color = (event.eventName.hashCode())%colorList.length;
             if (color < 0) color = color*-1;
             drawable.setColorFilter(Color.parseColor(colorList[color]), PorterDuff.Mode.SRC_ATOP);
             holder.textViewEventIcon.setBackground(drawable);
         }
-        holder.textViewEventIcon.setText(event.name.substring(0,1).toUpperCase());
-        holder.imageButtonActionInterested.setImageResource( databaseHelper.checkIfInterestedEvent(event.id) ? R.drawable.ic_mood_yellow : R.drawable.ic_mood);
+        holder.textViewEventIcon.setText(event.eventName.substring(0,1).toUpperCase());
+        holder.imageButtonActionInterested.setImageResource( databaseHelper.checkIfInterestedEvent(event.eventId) ? R.drawable.ic_mood_yellow : R.drawable.ic_mood);
         holder.linearLayoutActionInterested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean interested = false;
-                interested = databaseHelper.checkIfInterestedEvent(event.id);
+                boolean interested = databaseHelper.checkIfInterestedEvent(event.eventId);
                 holder.onClickAnimate(holder.imageButtonActionInterested);
                 holder.imageButtonActionInterested.setImageResource( !interested ? R.drawable.ic_mood_yellow : R.drawable.ic_mood);
                 //TODO Animations and sound effect on clicking like
-                if (interested) databaseHelper.setEventAsNotInterested(event.id);
-                else databaseHelper.setEventAsInterested(event.id);
+                if (interested) {
+                    event.interests--;
+                } else {
+                    event.interests++;
+                }
+
+                //TODO Animations and sound effect on clicking like
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("sessionId", DataService.SESSION_ID);
+                jsonObject.addProperty("eventId", event.eventId);
+                jsonObject.addProperty("interest", !interested);
+                ClientApi.call(context, DataService.ENGINE_EVENT, DataService.REQUEST_INTEREST_EVENT, gson.toJson(jsonObject).getBytes());
+            }
+        });
+        holder.imageButtonActionInterested.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean interested = databaseHelper.checkIfInterestedEvent(event.eventId);
+                holder.onClickAnimate(holder.imageButtonActionInterested);
+                holder.imageButtonActionInterested.setImageResource( !interested ? R.drawable.ic_mood_yellow : R.drawable.ic_mood);
+                //TODO Animations and sound effect on clicking like
+                if (interested) {
+                    event.interests--;
+                } else {
+                    event.interests++;
+                }
+
+                //TODO Animations and sound effect on clicking like
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("sessionId", DataService.SESSION_ID);
+                jsonObject.addProperty("eventId", event.eventId);
+                jsonObject.addProperty("interest", !interested);
+                ClientApi.call(context, DataService.ENGINE_EVENT, DataService.REQUEST_INTEREST_EVENT, gson.toJson(jsonObject).getBytes());
             }
         });
     }

@@ -12,16 +12,15 @@
             android:id="@+id/imgProfile"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="56dp"
             android:layout_marginBottom="32dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/profile"/>
+            android:src="@drawable/ic_profile"
+            android:layout_gravity="center_horizontal"/>
     <TextView
         android:id="@+id/lblNameProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:text="Elon Musk"
         android:textSize="30sp"
         android:textColor="@color/colorTextPrimaryWhite"/>
 
@@ -29,7 +28,7 @@
         android:id="@+id/lblBioProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CEO at SpaceX, Tesla, Hyperloop, The Boring Company. I love building rockets and want to die on mars. Future is here!"
+        android:text="Hey there, I'm using Kraft"
         android:padding="8dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
@@ -57,13 +56,19 @@
                 android:id="@+id/lblPostsCounterProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="106"
+                android:text="-"
                 android:textColor="@color/colorTextPrimaryWhite"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:text="Posts"
+                android:textColor="@color/colorTextSecondaryWhite"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:text="( Total no. of posts )"
                 android:textColor="@color/colorTextSecondaryWhite"/>
         </LinearLayout>
         
@@ -78,13 +83,19 @@
                 android:id="@+id/lblProfileViewsCounterProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="183"
+                android:text="-"
                 android:textColor="@color/colorTextPrimaryWhite"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:text="Profile Views"
+                android:text="Profile Views "
+                android:textColor="@color/colorTextSecondaryWhite"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:text="( Last 90 days )"
                 android:textColor="@color/colorTextSecondaryWhite"/>
         </LinearLayout>
         
@@ -106,7 +117,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="16dp"
-            android:text="elonmusk@spaceX.com"
+            android:text="you@domain.com"
             android:textColor="@color/colorTextPrimaryWhite"
             android:drawableLeft="@drawable/ic_email_white"
             android:drawablePadding="8dp"/>

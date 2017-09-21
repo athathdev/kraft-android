@@ -14,4 +14,8 @@
     <color name="colorHint">#1D000000</color>
     <color name="colorDividerWhite">#1FFFFFFF</color>
     <color name="colorWhiteDisabled">#50FFFFFF</color>
+    <color name="colorMaterialRed">#F44336</color>
+    <color name="colorMaterialAmber">#FFC107</color>
+    <color name="colorMaterialBlue">#2196F3</color>
+    <color name="colorMaterialGreen">#4CAF50</color>
 </resources>

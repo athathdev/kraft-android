@@ -27,7 +27,8 @@
         android:padding="16dp"
         android:hint="Start Writing..."
         android:textColor="@color/colorTextPrimaryBlack"
-        android:background="#00000000"/>
+        android:background="@color/colorTransparent"
+        android:maxLength="400"/>
 
 </LinearLayout>
 

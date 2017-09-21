@@ -13,6 +13,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.spaceuptech.clientapi.ClientApi;
+import com.spaceuptech.kraft.DataService;
 import com.spaceuptech.kraft.DatabaseHelper;
 import com.spaceuptech.kraft.R;
 import com.spaceuptech.kraft.data.Post;
@@ -27,8 +31,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
-    List<Post> posts;
-    Context context;
+    private List<Post> posts;
+    private Context context;
+    private Gson gson = new Gson();
     private DatabaseHelper databaseHelper;
 
     PostAdapter(Context context, DatabaseHelper databaseHelper, List<Post> posts) {
@@ -45,16 +50,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Post post = posts.get(position);
-        holder.textViewAuthorName.setText(post.authorName);
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("sessionId", DataService.SESSION_ID);
+        jsonObject.addProperty("postId", post.postId);
+        ClientApi.call(context, DataService.ENGINE_POST, DataService.REQUEST_IMPRESSION_POST, gson.toJson(jsonObject).getBytes());
+
+        holder.textViewAuthorName.setText(post.userName);
         holder.textViewAuthorName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("user-id", post.authorId);
+                intent.putExtra("user-id", post.userId);
+                intent.putExtra("user-name", post.userName);
+                intent.putExtra("user-img", post.userImg);
                 context.startActivity(intent);
             }
         });
-        holder.textViewTime.setText(TimeStamp.getTimeElapsed(Conversions.getTimeFromUUID(UUID.fromString(post.id))));
+        holder.textViewTime.setText(TimeStamp.getTimeElapsed(Conversions.getTimeFromUUID(UUID.fromString(post.postId))));
         holder.textViewContent.setText(post.content);
         if (post.likes < 1) {
             holder.textViewLikesCounter.setVisibility(View.GONE);
@@ -62,18 +75,32 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             holder.textViewLikesCounter.setVisibility(View.VISIBLE);
             holder.textViewLikesCounter.setText(String.valueOf(post.likes));
         }
-        Glide.with(context).load(post.authorPic).into(holder.circleImageViewProfileAuthor);
+        Glide.with(context).load(post.userImg).into(holder.circleImageViewProfileAuthor);
         // TODO If no image then show the background containing first letter of User
-        holder.imageButtonActionLikePost.setImageResource((databaseHelper.checkIfPostLiked(post.id)) ? R.drawable.ic_favourite_red : R.drawable.ic_favourite);
+        holder.imageButtonActionLikePost.setImageResource((databaseHelper.checkIfPostLiked(post.postId)) ? R.drawable.ic_favourite_red : R.drawable.ic_favourite);
         holder.imageButtonActionLikePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean liked = databaseHelper.checkIfPostLiked(post.id);
+                boolean liked = databaseHelper.checkIfPostLiked(post.postId);
                 holder.onClickAnimate(view);
                 holder.imageButtonActionLikePost.setImageResource(!liked ? R.drawable.ic_favourite_red : R.drawable.ic_favourite);
-                if (liked) databaseHelper.setPostAsNotLiked(post.id);
-                else databaseHelper.setPostAsLiked(post.id);
+                if (liked) {
+                    post.likes--;
+                    if (post.likes == 0)
+                        holder.textViewLikesCounter.setVisibility(View.GONE);
+                } else {
+                    post.likes++;
+                    if (post.likes > 0)
+                        holder.textViewLikesCounter.setVisibility(View.VISIBLE);
+                }
+                holder.textViewLikesCounter.setText(String.valueOf(post.likes));
+
                 //TODO Animations and sound effect on clicking like
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("sessionId", DataService.SESSION_ID);
+                jsonObject.addProperty("postId", post.postId);
+                jsonObject.addProperty("like", !liked);
+                ClientApi.call(context, DataService.ENGINE_POST, DataService.REQUEST_LIKE_POST, gson.toJson(jsonObject).getBytes());
             }
         });
     }

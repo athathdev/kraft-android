@@ -11,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -42,11 +44,10 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
-                new IntentFilter(DataService.REQUEST_SIGNUP));
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(DataService.REQUEST_SIGNUP));
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarSignUp);
-        Button btnDone = (Button)findViewById(R.id.btnDoneSignUp);
+        final Button btnDone = (Button)findViewById(R.id.btnDoneSignUp);
         CircleImageView circleImageView = (CircleImageView) findViewById(R.id.imgUserSignUp);
         TextView textViewName = (TextView) findViewById(R.id.lblNameSignUp);
         final EditText editTextUserId = (EditText) findViewById(R.id.txtUserIdSignUp);
@@ -62,6 +63,23 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        editTextUserId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (editTextUserId.getText().length() > 0) btnDone.setTextColor(getResources().getColor(R.color.white));
+                else btnDone.setTextColor(getResources().getColor(R.color.colorWhiteDisabled));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +106,13 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
+                SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_user), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("bio", bio);
+                editor.putString("accType", accType.toLowerCase());
+                editor.putString("userId", userId);
+                editor.commit();
+
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("sessionId", DataService.SESSION_ID);
                 jsonObject.addProperty("userId", userId);
@@ -95,18 +120,15 @@ public class SignUpActivity extends AppCompatActivity {
                 jsonObject.addProperty("bio", bio);
                 jsonObject.addProperty("accType", accType.toLowerCase());
                 jsonObject.addProperty("img", img);
-                ClientApi.call(view.getContext(), "kraft-login", DataService.REQUEST_SIGNUP, gson.toJson(jsonObject).getBytes());
+                ClientApi.call(view.getContext(), DataService.ENGINE_LOGIN, DataService.REQUEST_SIGNUP, gson.toJson(jsonObject).getBytes());
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
             }
         });
 
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_user), Context.MODE_PRIVATE);
         name = sharedPref.getString("name", "user");
         email = sharedPref.getString("email", "user@gmail.com");
-        img = sharedPref.getString("img", "img");
-
+        img = sharedPref.getString("img", "");
         textViewName.setText("Hi, " + name);
         Glide.with(this).load(img).into(circleImageView);
 

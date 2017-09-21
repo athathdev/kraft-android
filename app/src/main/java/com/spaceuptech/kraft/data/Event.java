@@ -1,20 +1,19 @@
 package com.spaceuptech.kraft.data;
 
-import java.util.Date;
-
-/**
- * Created by ubuntu on 19/9/17.
- */
 
 public class Event {
-    public String id, name, content, organizationName;
+    public String eventId, eventName, content, userId, userName, eventImg;
     public long date;
+    public int interests;
 
-    public Event(String id, String name, String organizationName, String content, long date){
-        this.id = id;
-        this.name = name;
-        this.organizationName = organizationName;
+    public Event(String eventId, String eventName, String eventImg, String userId, String userName,  String content, long date, int interests){
+        this.eventId = eventId;
+        this.eventName = eventName;
+        this.eventImg = eventImg;
+        this.userId = userId;
+        this.userName = userName;
         this.content = content;
         this.date = date;
+        this.interests = interests;
     }
 }

@@ -7,18 +7,27 @@
     tools:context="com.spaceuptech.kraft.posts.HomeFragment">
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/fabCreatePost"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:src="@drawable/ic_create_white"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:onClick="createPost"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewPosts"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipePosts"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewPosts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </RelativeLayout>

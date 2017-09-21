@@ -44,8 +44,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
-                new IntentFilter(DataService.REQUEST_LOGIN));
+        startService(new Intent(this, DataService.class));
+
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_user), Context.MODE_PRIVATE);
+        String userId = sharedPref.getString("name", "");
+        if (!userId.equals("")) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
@@ -61,9 +68,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(this);
 
-        startService(new Intent(this, DataService.class));
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(DataService.REQUEST_LOGIN));
 
-        silentLogin();
     }
 
 
@@ -90,13 +96,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             editor.putString("name", response.user.name);
             editor.putString("email", response.user.email);
             editor.putString("img", response.user.img);
+            editor.putString("userId", response.user.userId);
             editor.commit();
 
             if (response.exists) {
+                Log.d(TAG, "Start activity");
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
                 return;
             }
+            LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(broadcastReceiver);
             startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
             finish();
         }
@@ -149,39 +158,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    class SignUp {
-        String idToken, type;
-
-        SignUp(String idToken, String type) {
-            this.idToken = idToken;
-            this.type = type;
-        }
-    }
-
-    BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
-    };
-
-    void silentLogin() {
-        OptionalPendingResult<GoogleSignInResult> pendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (pendingResult.isDone()) {
-            GoogleSignInResult result = pendingResult.get();
-            handleGoogleSignInResult(result);
-            return;
-        }
-
-        pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-            @Override
-            public void onResult(@NonNull GoogleSignInResult result) {
-                handleGoogleSignInResult(result);
-            }
-        });
-    }
-
-    void handleGoogleSignInResult(GoogleSignInResult result) {
+    public void handleGoogleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.getStatus());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
@@ -191,8 +168,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             JsonObject json = new JsonObject();
             json.addProperty("idToken", idToken);
-            json.addProperty("type", "google");
-            ClientApi.call(this, "kraft-login", "login", new Gson().toJson(json).getBytes());
+            json.addProperty("auth", "google");
+            ClientApi.call(this, DataService.ENGINE_LOGIN, "login", new Gson().toJson(json).getBytes());
         } else {
             // Signed out, show unauthenticated UI.
             Snackbar.make(findViewById(R.id.activityLoginLayout), "Could not sign in", Snackbar.LENGTH_LONG).show();
