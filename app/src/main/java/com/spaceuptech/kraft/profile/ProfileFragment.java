@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -29,7 +30,11 @@ public class ProfileFragment extends Fragment {
     private String name, email, img, bio, userId;
     private CircleImageView circleImageView;
     private TextView textViewName, textViewEmail, textViewBio, textViewPostsCounter, textViewProfileViewsCounter;
+    private FloatingActionButton fab;
     private Gson gson = new Gson();
+
+    private boolean isShown = false;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -52,6 +57,30 @@ public class ProfileFragment extends Fragment {
         textViewBio = (TextView) v.findViewById(R.id.lblBioProfile);
         textViewPostsCounter = (TextView) v.findViewById(R.id.lblPostsCounterProfile);
         textViewProfileViewsCounter = (TextView) v.findViewById(R.id.lblProfileViewsCounterProfile);
+        fab = (FloatingActionButton) v.findViewById(R.id.image_edit_button);
+
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isShown) {
+                    fab.animate().alpha(0.0f);
+                    circleImageView.animate().alpha(1.0f);
+                }else{
+                    fab.animate().alpha(1.0f);
+                    circleImageView.animate().alpha(0.7f);
+                }
+                isShown = !isShown;
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+            }
+        });
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_user), Context.MODE_PRIVATE);
         name = sharedPref.getString("name", "user");

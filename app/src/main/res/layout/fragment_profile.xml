@@ -8,6 +8,9 @@
     tools:context="com.spaceuptech.kraft.profile.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgProfile"
             android:layout_width="90dp"
@@ -15,7 +18,18 @@
             android:layout_marginTop="56dp"
             android:layout_marginBottom="32dp"
             android:src="@drawable/ic_profile"
+            android:focusableInTouchMode="true"
             android:layout_gravity="center_horizontal"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/image_edit_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="120dp"
+            android:src="@drawable/ic_create_white"
+            android:alpha="0.0"/>
+    </RelativeLayout>
     <TextView
         android:id="@+id/lblNameProfile"
         android:layout_width="wrap_content"
